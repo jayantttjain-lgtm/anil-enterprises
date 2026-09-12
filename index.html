@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anil Enterprises — Handmade Rustic Furniture</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Karla:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --linen: #E7DFC9;
+    --linen-deep: #DCD2B6;
+    --walnut: #4A3226;
+    --walnut-deep: #2E1F17;
+    --ink: #2B2420;
+    --sage: #6E7B58;
+    --sage-deep: #56613F;
+    --sienna: #A85A26;
+    --brass: #A3822F;
+    --cream-card: #F3EEDF;
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+
+  html{scroll-behavior:smooth;}
+
+  body{
+    background:var(--linen);
+    color:var(--ink);
+    font-family:'Karla', sans-serif;
+    font-size:17px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  h1,h2,h3{
+    font-family:'Fraunces', serif;
+    color:var(--walnut-deep);
+    font-weight:500;
+    line-height:1.1;
+    letter-spacing:-0.01em;
+  }
+
+  a{color:inherit;}
+
+  .wrap{
+    max-width:1180px;
+    margin:0 auto;
+    padding:0 32px;
+  }
+
+  /* subtle wood-grain texture overlay */
+  .grain{
+    position:relative;
+  }
+  .grain::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    opacity:0.05;
+    background-image: repeating-linear-gradient(178deg, #000 0px, transparent 1px, transparent 3px, #000 4px);
+  }
+
+  /* ===== HEADER ===== */
+  header{
+    position:sticky;
+    top:0;
+    z-index:50;
+    background:rgba(231,223,201,0.92);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid rgba(74,50,38,0.18);
+  }
+  .nav{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:20px 32px;
+    max-width:1180px;
+    margin:0 auto;
+  }
+  .logo{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-family:'Fraunces', serif;
+    font-size:22px;
+    color:var(--walnut-deep);
+    font-weight:600;
+  }
+  .logo svg{width:30px;height:30px;flex-shrink:0;}
+  .nav-links{
+    display:flex;
+    gap:36px;
+    font-size:15px;
+    font-weight:500;
+  }
+  .nav-links a{
+    text-decoration:none;
+    padding-bottom:4px;
+    border-bottom:1px solid transparent;
+    transition:border-color .2s ease, color .2s ease;
+  }
+  .nav-links a:hover{border-color:var(--sienna); color:var(--sienna);}
+  .nav-cta{
+    background:var(--walnut-deep);
+    color:var(--linen);
+    padding:10px 20px;
+    border-radius:2px;
+    text-decoration:none;
+    font-size:14px;
+    font-weight:600;
+    border:1px solid var(--walnut-deep);
+    transition:background .2s ease;
+  }
+  .nav-cta:hover{background:var(--sienna); border-color:var(--sienna);}
+
+  @media(max-width:760px){
+    .nav-links{display:none;}
+  }
+
+  /* ===== HERO ===== */
+  .hero{
+    padding:88px 0 60px;
+    overflow:hidden;
+  }
+  .hero-grid{
+    display:grid;
+    grid-template-columns:1.1fr 0.9fr;
+    gap:56px;
+    align-items:center;
+  }
+  .hero-eyebrow{
+    font-size:15px;
+    color:var(--sage-deep);
+    font-weight:600;
+    margin-bottom:18px;
+  }
+  .hero h1{
+    font-size:clamp(38px, 5.2vw, 62px);
+    margin-bottom:22px;
+    max-width:11ch;
+  }
+  .hero p.lede{
+    font-size:19px;
+    max-width:46ch;
+    color:#443627;
+    margin-bottom:32px;
+  }
+  .hero-actions{display:flex; gap:16px; flex-wrap:wrap;}
+  .btn-primary{
+    background:var(--sage);
+    color:#fff;
+    padding:14px 28px;
+    border-radius:2px;
+    text-decoration:none;
+    font-weight:600;
+    font-size:15px;
+    border:1px solid var(--sage);
+    transition:background .2s ease, transform .15s ease;
+    display:inline-block;
+  }
+  .btn-primary:hover{background:var(--sage-deep); transform:translateY(-1px);}
+  .btn-ghost{
+    padding:14px 26px;
+    border-radius:2px;
+    text-decoration:none;
+    font-weight:600;
+    font-size:15px;
+    border:1px solid var(--walnut);
+    color:var(--walnut-deep);
+    transition:background .2s ease;
+  }
+  .btn-ghost:hover{background:rgba(74,50,38,0.08);}
+
+  .hero-art{
+    position:relative;
+    animation:rise 900ms ease-out both;
+  }
+  @keyframes rise{
+    from{opacity:0; transform:translateY(18px);}
+    to{opacity:1; transform:translateY(0);}
+  }
+  .hero-art svg{width:100%; height:auto; display:block;}
+
+  .hero-stats{
+    display:flex;
+    gap:40px;
+    margin-top:44px;
+    padding-top:28px;
+    border-top:1px solid rgba(74,50,38,0.2);
+  }
+  .stat-num{
+    font-family:'Fraunces', serif;
+    font-size:30px;
+    color:var(--sienna);
+    font-weight:500;
+  }
+  .stat-label{font-size:13.5px; color:#5a4c3c; margin-top:2px;}
+
+  /* ===== SECTION HEADERS ===== */
+  .section{padding:80px 0;}
+  .section-head{
+    max-width:60ch;
+    margin-bottom:48px;
+  }
+  .section-head h2{
+    font-size:clamp(28px,3.4vw,38px);
+    margin-bottom:14px;
+  }
+  .section-head p{color:#5a4c3c; font-size:16.5px;}
+  .divider{
+    width:56px;
+    height:3px;
+    background:var(--sienna);
+    margin-bottom:20px;
+    border-radius:2px;
+  }
+
+  .band-dark{
+    background:var(--walnut-deep);
+    color:var(--linen);
+  }
+  .band-dark h2, .band-dark h3{color:var(--linen);}
+  .band-dark .section-head p{color:#cabfa4;}
+
+  /* ===== CATALOG ===== */
+  .cat-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(230px, 1fr));
+    gap:22px;
+  }
+  .cat-card{
+    background:var(--cream-card);
+    border:1px solid rgba(74,50,38,0.14);
+    border-radius:3px;
+    padding:26px 24px 24px;
+    transition:transform .25s ease, box-shadow .25s ease;
+  }
+  .cat-card:hover{transform:translateY(-4px); box-shadow:0 14px 28px rgba(46,31,23,0.14);}
+  .cat-icon{
+    width:100%;
+    height:110px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin-bottom:16px;
+  }
+  .cat-icon svg{width:100%; height:100%; max-width:150px;}
+  .cat-name{font-family:'Fraunces', serif; font-size:20px; margin-bottom:8px; color:var(--walnut-deep);}
+  .cat-material{
+    display:inline-block;
+    font-size:12px;
+    font-weight:700;
+    color:var(--sage-deep);
+    background:rgba(110,123,88,0.14);
+    padding:4px 10px;
+    border-radius:20px;
+    margin-bottom:10px;
+  }
+  .cat-desc{font-size:14.5px; color:#5a4c3c; margin-bottom:16px;}
+  .cat-link{
+    font-size:14px;
+    font-weight:700;
+    color:var(--sienna);
+    text-decoration:none;
+    border-bottom:1px solid var(--sienna);
+    padding-bottom:1px;
+  }
+  .piece{
+    background:var(--cream-card);
+    border:1px solid rgba(74,50,38,0.14);
+    border-radius:3px;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    transition:transform .25s ease, box-shadow .25s ease;
+  }
+  .piece:hover{transform:translateY(-4px); box-shadow:0 14px 28px rgba(46,31,23,0.14);}
+  .piece-art{
+    background:linear-gradient(160deg, #EFE7D3, #E2D6B8);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:26px;
+    flex:1;
+  }
+  .piece-art svg{width:100%; max-width:180px; height:auto;}
+  .piece-body{padding:18px 20px 22px;}
+  .piece-tag{font-size:12.5px; color:var(--sage-deep); font-weight:700; margin-bottom:6px;}
+  .piece-name{font-family:'Fraunces', serif; font-size:20px; margin-bottom:6px; color:var(--walnut-deep);}
+  .piece-desc{font-size:14.5px; color:#5a4c3c; margin-bottom:12px;}
+  .piece-price{font-weight:700; color:var(--sienna); font-size:15.5px;}
+
+  .p1{grid-column:span 3; grid-row:span 30;}
+  .p2{grid-column:span 3; grid-row:span 30;}
+  .p3{grid-column:span 2; grid-row:span 27;}
+  .p4{grid-column:span 2; grid-row:span 27;}
+  .p5{grid-column:span 2; grid-row:span 27;}
+  .p6{grid-column:span 6; grid-row:span 24;}
+
+  @media(max-width:900px){
+    .catalog-grid{grid-template-columns:1fr 1fr;}
+    .p1,.p2,.p3,.p4,.p5,.p6{grid-column:span 1; grid-row:auto;}
+    .piece{height:auto;}
+  }
+  @media(max-width:560px){
+    .catalog-grid{grid-template-columns:1fr;}
+  }
+
+  /* ===== ABOUT / PROCESS ===== */
+  .about-grid{
+    display:grid;
+    grid-template-columns:0.9fr 1.1fr;
+    gap:60px;
+    align-items:start;
+  }
+  .process-list{margin-top:10px;}
+  .process-item{
+    display:flex;
+    gap:20px;
+    padding:22px 0;
+    border-top:1px solid rgba(231,223,201,0.16);
+  }
+  .process-item:last-child{border-bottom:1px solid rgba(231,223,201,0.16);}
+  .process-icon{
+    width:44px;height:44px;flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;
+    border:1px solid rgba(231,223,201,0.35);
+    border-radius:50%;
+  }
+  .process-icon svg{width:22px;height:22px;}
+  .process-text h3{font-size:18px; margin-bottom:4px; font-weight:500;}
+  .process-text p{font-size:14.5px; color:#cabfa4;}
+
+  /* ===== CONTACT ===== */
+  .contact-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:60px;
+  }
+  .info-block{margin-bottom:28px;}
+  .info-label{font-size:13px; font-weight:700; color:var(--sage-deep); margin-bottom:6px;}
+  .info-value{font-size:16px; color:var(--ink);}
+  .info-value a{text-decoration:none; border-bottom:1px solid var(--sienna); color:var(--walnut-deep);}
+  .map-note{
+    margin-top:8px;
+    background:var(--cream-card);
+    border:1px solid rgba(74,50,38,0.14);
+    border-radius:3px;
+    padding:20px;
+    font-size:14px;
+    color:#5a4c3c;
+  }
+
+  .storefront-photo{
+    margin-top:24px;
+    border:1px solid rgba(74,50,38,0.14);
+    border-radius:4px;
+    overflow:hidden;
+  }
+  .storefront-photo img{
+    width:100%;
+    display:block;
+    height:340px;
+    object-fit:cover;
+    object-position:center 20%;
+  }
+  .storefront-caption{
+    padding:12px 16px;
+    font-size:13.5px;
+    color:#5a4c3c;
+    background:var(--cream-card);
+  }
+
+  form{
+    background:var(--cream-card);
+    border:1px solid rgba(74,50,38,0.14);
+    border-radius:4px;
+    padding:32px;
+  }
+  .field{margin-bottom:20px;}
+  .field label{
+    display:block;
+    font-size:13.5px;
+    font-weight:700;
+    color:var(--walnut-deep);
+    margin-bottom:7px;
+  }
+  .field input, .field select, .field textarea{
+    width:100%;
+    padding:12px 14px;
+    border:1px solid rgba(74,50,38,0.3);
+    border-radius:2px;
+    background:#fff;
+    font-family:'Karla', sans-serif;
+    font-size:15px;
+    color:var(--ink);
+  }
+  .field textarea{resize:vertical; min-height:100px;}
+  .field input:focus, .field select:focus, .field textarea:focus{
+    outline:2px solid var(--sage);
+    outline-offset:1px;
+  }
+  .field-row{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+  .submit-btn{
+    width:100%;
+    background:var(--sienna);
+    color:#fff;
+    border:none;
+    padding:15px;
+    border-radius:2px;
+    font-weight:700;
+    font-size:15.5px;
+    cursor:pointer;
+    transition:background .2s ease;
+  }
+  .submit-btn:hover{background:#8c491d;}
+  .form-note{font-size:13px; color:#6b5c48; margin-top:12px;}
+  .confirm{
+    display:none;
+    background:var(--sage);
+    color:#fff;
+    padding:16px 20px;
+    border-radius:3px;
+    font-size:14.5px;
+    margin-top:16px;
+  }
+
+  @media(max-width:820px){
+    .hero-grid, .about-grid, .contact-grid{grid-template-columns:1fr;}
+    .hero-art{order:-1;}
+    .field-row{grid-template-columns:1fr;}
+  }
+
+  footer{
+    background:var(--walnut-deep);
+    color:#cabfa4;
+    padding:40px 0;
+    font-size:14px;
+  }
+  .footer-row{
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:16px;
+    align-items:center;
+  }
+  .footer-row a{text-decoration:none; color:#cabfa4; border-bottom:1px solid transparent;}
+  .footer-row a:hover{border-color:#cabfa4;}
+
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    .hero-art{animation:none;}
+    .piece{transition:none;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <div class="logo">
+      <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M6 26V10L16 4L26 10V26" stroke="#4A3226" stroke-width="2" stroke-linejoin="round"/>
+        <path d="M12 26V17H20V26" stroke="#A85A26" stroke-width="2" stroke-linejoin="round"/>
+      </svg>
+      Anil Enterprises
+    </div>
+    <nav class="nav-links">
+      <a href="#catalog">Catalog</a>
+      <a href="#about">Our Craft</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <a class="nav-cta" href="#contact">Request a Quote</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="hero-eyebrow">Family-run workshop, est. 1994</div>
+      <h1>Furniture built the way your grandfather's was.</h1>
+      <p class="lede">Solid oak, reclaimed pine, and hand-rubbed finishes — every piece is joined, sanded, and assembled in our own workshop, not stamped from a catalog.</p>
+      <p style="font-size:15.5px; font-weight:600; color:var(--sage-deep); margin-bottom:28px; max-width:46ch;">All varieties of steel and wooden furniture available — for home as well as office — with full customization on every order.</p>
+      <div class="hero-actions">
+        <a class="btn-primary" href="#catalog">Browse the Catalog</a>
+        <a class="btn-ghost" href="#contact">Visit the Workshop</a>
+      </div>
+      <div class="hero-stats">
+        <div>
+          <div class="stat-num">30+</div>
+          <div class="stat-label">years building furniture</div>
+        </div>
+        <div>
+          <div class="stat-num">100%</div>
+          <div class="stat-label">solid wood, no veneer</div>
+        </div>
+        <div>
+          <div class="stat-num">2,400</div>
+          <div class="stat-label">pieces in local homes</div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-art">
+      <svg viewBox="0 0 420 420" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="210" cy="360" rx="160" ry="16" fill="#4A3226" opacity="0.12"/>
+        <!-- chair -->
+        <path d="M110 360V230" stroke="#4A3226" stroke-width="6" stroke-linecap="round"/>
+        <path d="M300 360V230" stroke="#4A3226" stroke-width="6" stroke-linecap="round"/>
+        <path d="M110 230V80" stroke="#4A3226" stroke-width="6" stroke-linecap="round"/>
+        <path d="M300 230V150" stroke="#4A3226" stroke-width="6" stroke-linecap="round"/>
+        <rect x="100" y="220" width="210" height="18" rx="3" fill="#A85A26"/>
+        <path d="M115 82H305" stroke="#4A3226" stroke-width="6" stroke-linecap="round"/>
+        <path d="M115 120H305" stroke="#4A3226" stroke-width="5" stroke-linecap="round" opacity="0.55"/>
+        <path d="M115 160H305" stroke="#4A3226" stroke-width="5" stroke-linecap="round" opacity="0.55"/>
+        <path d="M150 360V300" stroke="#4A3226" stroke-width="6" stroke-linecap="round"/>
+        <path d="M260 360V300" stroke="#4A3226" stroke-width="6" stroke-linecap="round"/>
+        <path d="M140 296H320" stroke="#6E7B58" stroke-width="5" stroke-linecap="round"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="catalog">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="divider"></div>
+      <h2>The Catalog</h2>
+      <p>All varieties of steel and wooden furniture, for home and office — every category below is available fully customized to your size, finish, and budget.</p>
+    </div>
+
+    <div class="cat-grid">
+
+      <div class="cat-card">
+        <div class="cat-icon">
+          <svg viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M25 95V60C25 51 32 44 41 44H159C168 44 175 51 175 60V95" stroke="#4A3226" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M18 95H182V115C182 120 178 124 173 124H27C22 124 18 120 18 115V95Z" fill="#A85A26" opacity="0.85"/>
+            <path d="M18 95V80C18 74 22 70 28 70H172C178 70 182 74 182 80V95" stroke="#4A3226" stroke-width="6" stroke-linecap="round"/>
+            <path d="M25 124V138M175 124V138" stroke="#4A3226" stroke-width="7" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="cat-name">Sofa</div>
+        <div class="cat-material">Steel frame &amp; wooden</div>
+        <p class="cat-desc">2, 3, and 5-seater sofa sets, made to order in your choice of upholstery and frame.</p>
+        <a class="cat-link" href="#contact">Enquire for pricing</a>
+      </div>
+
+      <div class="cat-card">
+        <div class="cat-icon">
+          <svg viewBox="0 0 200 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="20" y="60" width="160" height="14" rx="2" fill="#A85A26"/>
+            <path d="M30 74V130M170 74V130" stroke="#4A3226" stroke-width="7" stroke-linecap="round"/>
+            <path d="M50 74V115M150 74V115" stroke="#4A3226" stroke-width="6" stroke-linecap="round" opacity="0.5"/>
+          </svg>
+        </div>
+        <div class="cat-name">Dining Table</div>
+        <div class="cat-material">Wooden</div>
+        <p class="cat-desc">4, 6, and 8-seater dining sets in solid wood, sized to fit your dining space.</p>
+        <a class="cat-link" href="#contact">Enquire for pricing</a>
+      </div>
+
+      <div class="cat-card">
+        <div class="cat-icon">
+          <svg viewBox="0 0 200 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="25" y="55" width="150" height="16" rx="2" fill="#4A3226"/>
+            <path d="M35 71V130M165 71V130" stroke="#4A3226" stroke-width="7" stroke-linecap="round"/>
+            <rect x="35" y="90" width="60" height="30" rx="2" fill="#A85A26" opacity="0.6"/>
+            <path d="M40 100H90M40 110H90" stroke="#4A3226" stroke-width="2" opacity="0.4"/>
+          </svg>
+        </div>
+        <div class="cat-name">Office Table</div>
+        <div class="cat-material">Steel &amp; wooden</div>
+        <p class="cat-desc">Executive desks, workstations, and reception tables built for daily office use.</p>
+        <a class="cat-link" href="#contact">Enquire for pricing</a>
+      </div>
+
+      <div class="cat-card">
+        <div class="cat-icon">
+          <svg viewBox="0 0 160 170" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M45 60C45 45 60 35 80 35C100 35 115 45 115 60" stroke="#4A3226" stroke-width="8" stroke-linecap="round" fill="none"/>
+            <rect x="55" y="60" width="50" height="45" rx="4" fill="#A85A26"/>
+            <path d="M60 105V145M100 105V145" stroke="#4A3226" stroke-width="7" stroke-linecap="round"/>
+            <path d="M60 145 A20 8 0 0 0 100 145" stroke="#6E7B58" stroke-width="5" fill="none" stroke-linecap="round"/>
+            <circle cx="80" cy="155" r="4" fill="#4A3226"/>
+          </svg>
+        </div>
+        <div class="cat-name">Revolving Chair</div>
+        <div class="cat-material">Steel &amp; cushioned</div>
+        <p class="cat-desc">Adjustable-height revolving chairs for office desks, counters, and workstations.</p>
+        <a class="cat-link" href="#contact">Enquire for pricing</a>
+      </div>
+
+      <div class="cat-card">
+        <div class="cat-icon">
+          <svg viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 60H30V115" stroke="#4A3226" stroke-width="7" stroke-linecap="round"/>
+            <path d="M180 60H170V115" stroke="#4A3226" stroke-width="7" stroke-linecap="round"/>
+            <rect x="25" y="80" width="150" height="35" rx="3" fill="#A85A26"/>
+            <rect x="20" y="55" width="30" height="30" rx="3" fill="#4A3226"/>
+            <path d="M20 118V135M180 118V135" stroke="#4A3226" stroke-width="7" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="cat-name">Bed</div>
+        <div class="cat-material">Wooden</div>
+        <p class="cat-desc">Single, double, and king-size beds, with or without storage, in your choice of wood finish.</p>
+        <a class="cat-link" href="#contact">Enquire for pricing</a>
+      </div>
+
+      <div class="cat-card">
+        <div class="cat-icon">
+          <svg viewBox="0 0 200 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="20" y="35" width="160" height="55" rx="8" fill="#A85A26"/>
+            <rect x="20" y="35" width="160" height="14" rx="7" fill="#6E7B58" opacity="0.7"/>
+            <path d="M20 90V100M180 90V100" stroke="#4A3226" stroke-width="6" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="cat-name">Mattress</div>
+        <div class="cat-material">Multiple firmness options</div>
+        <p class="cat-desc">Mattresses in standard and custom sizes to match any bed frame.</p>
+        <a class="cat-link" href="#contact">Enquire for pricing</a>
+      </div>
+
+      <div class="cat-card">
+        <div class="cat-icon">
+          <svg viewBox="0 0 160 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="25" y="20" width="110" height="140" rx="3" fill="none" stroke="#4A3226" stroke-width="7"/>
+            <path d="M80 20V160" stroke="#4A3226" stroke-width="5" opacity="0.6"/>
+            <circle cx="65" cy="90" r="3.5" fill="#A85A26"/>
+            <circle cx="95" cy="90" r="3.5" fill="#A85A26"/>
+          </svg>
+        </div>
+        <div class="cat-name">Almirah</div>
+        <div class="cat-material">Steel &amp; wooden</div>
+        <p class="cat-desc">Wardrobes and steel almirahs for home and office storage, with locking options.</p>
+        <a class="cat-link" href="#contact">Enquire for pricing</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section class="section band-dark grain" id="about">
+  <div class="wrap about-grid">
+    <div>
+      <div class="divider"></div>
+      <h2>Made by hand, not by machine</h2>
+      <p style="color:#cabfa4; margin-top:16px; max-width:42ch;">We source lumber from within 200 miles, mill it ourselves, and join every piece using traditional mortise-and-tenon and dovetail joinery — no particleboard, no staples, nothing that won't outlast us.</p>
+    </div>
+    <div class="process-list">
+      <div class="process-item">
+        <div class="process-icon">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M4 20L14 10M14 10L10 6M14 10L18 14" stroke="#E7DFC9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="process-text">
+          <h3>Sourced locally</h3>
+          <p>Oak, walnut, and ash milled from responsibly managed regional forests.</p>
+        </div>
+      </div>
+      <div class="process-item">
+        <div class="process-icon">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M6 18L18 6M6 6H18V18" stroke="#E7DFC9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="process-text">
+          <h3>Joined, not fastened</h3>
+          <p>Traditional joinery means every piece can be repaired, not just replaced.</p>
+        </div>
+      </div>
+      <div class="process-item">
+        <div class="process-icon">
+          <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="#E7DFC9" stroke-width="2"/><path d="M12 8V12L15 14" stroke="#E7DFC9" stroke-width="2" stroke-linecap="round"/></svg>
+        </div>
+        <div class="process-text">
+          <h3>Built to order</h3>
+          <p>Most pieces take 3–5 weeks — we build after you order, not before.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="contact">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="divider"></div>
+      <h2>Visit or Get in Touch</h2>
+      <p>Stop by the workshop to see pieces in person, or send us your ideas and dimensions and we'll follow up within two business days.</p>
+    </div>
+
+    <div class="contact-grid">
+      <div>
+        <div class="info-block">
+          <div class="info-label">Workshop &amp; Showroom</div>
+          <div class="info-value">Below Shikhar Palace, Jabalpur Road, in front of Shubha Motors Hero Agency, Katra, Mandla</div>
+        </div>
+        <div class="info-block">
+          <div class="info-label">Hours</div>
+          <div class="info-value">10am–8:30pm · Closed Friday</div>
+        </div>
+        <div class="info-block">
+          <div class="info-label">Phone</div>
+          <div class="info-value"><a href="tel:+919589002838">+91 95890 02838</a></div>
+        </div>
+        <div class="info-block">
+          <div class="info-label">Email</div>
+          <div class="info-value"><a href="mailto:jainjayant558@gmail.com">jainjayant558@gmail.com</a></div>
+        </div>
+        <div class="map-note">Look for Shubha Motors Hero Agency on Jabalpur Road — the showroom is just below Shikhar Palace, right across from it.</div>
+        <div class="storefront-photo">
+          <img src="storefront.jpeg" alt="Anil Enterprises storefront below Hotel Shikhar Palace, Jabalpur Road, Katra, Mandla">
+          <div class="storefront-caption">Our storefront — look for the Anil Enterprises signage below the Shikhar Palace building.</div>
+        </div>
+        <div style="margin-top:16px; border:1px solid rgba(74,50,38,0.14); border-radius:3px; overflow:hidden;">
+          <iframe
+            title="Anil Enterprises location map"
+            width="100%"
+            height="260"
+            style="border:0; display:block;"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            src="https://www.google.com/maps?q=22.6286985,80.3651015&z=17&output=embed">
+          </iframe>
+        </div>
+        <a href="https://www.google.com/maps/dir/?api=1&destination=22.6286985,80.3651015" target="_blank" rel="noopener noreferrer" style="display:inline-flex; align-items:center; gap:8px; margin-top:14px; font-size:14.5px; font-weight:700; color:var(--sienna); text-decoration:none; border-bottom:1px solid var(--sienna); padding-bottom:2px;">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 21C12 21 19 15.5 19 10C19 6.13401 15.866 3 12 3C8.13401 3 5 6.13401 5 10C5 15.5 12 21 12 21Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="10" r="2.5" stroke="currentColor" stroke-width="2"/></svg>
+          Get Directions on Google Maps
+        </a>
+      </div>
+
+      <form id="inquiryForm">
+        <div class="field">
+          <label for="name">Full name</label>
+          <input type="text" id="name" required placeholder="Jordan Reyes">
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="email">Email</label>
+            <input type="email" id="email" required placeholder="you@example.com">
+          </div>
+          <div class="field">
+            <label for="phone">Phone (optional)</label>
+            <input type="tel" id="phone" placeholder="+91 95890 02838">
+          </div>
+        </div>
+        <div class="field">
+          <label for="piece">What are you interested in?</label>
+          <select id="piece">
+            <option>Dining table</option>
+            <option>Chairs / seating</option>
+            <option>Storage / shelving</option>
+            <option>Custom commission</option>
+            <option>Something else</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="message">Tell us about your space</label>
+          <textarea id="message" placeholder="Dimensions, wood preference, timeline..."></textarea>
+        </div>
+        <button type="submit" class="submit-btn">Send Inquiry</button>
+        <p class="form-note">This form is a working demo — connect it to your email or CRM to start receiving real inquiries.</p>
+        <div class="confirm" id="confirmMsg">Thanks — we'll be in touch within two business days.</div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap footer-row">
+    <div>© 2026 Anil Enterprises Furniture Co.</div>
+    <div style="display:flex; gap:24px;">
+      <a href="#catalog">Catalog</a>
+      <a href="#about">Our Craft</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('inquiryForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    document.getElementById('confirmMsg').style.display = 'block';
+    this.reset();
+  });
+</script>
+
+</body>
+</html>
