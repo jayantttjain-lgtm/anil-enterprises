@@ -7,6 +7,33 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Karla:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- ===== FIREBASE ===== -->
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+<script>
+  // ======================================================================
+  // PASTE YOUR FIREBASE CONFIG HERE — from Firebase Console → Project
+  // Settings → General → Your apps → SDK setup and configuration.
+  // Everything on the site (login, catalog, customization board,
+  // notifications) is disabled until this is filled in.
+  // ======================================================================
+  var firebaseConfig = {
+    apiKey: "AIzaSyADQqaCCbrddVYSlwmFP3NhFQlD5Ixo18c",
+    authDomain: "anilenterprises2022ae.firebaseapp.com",
+    projectId: "anilenterprises2022ae",
+    storageBucket: "anilenterprises2022ae.firebasestorage.app",
+    messagingSenderId: "549810604034",
+    appId: "1:549810604034:web:c13c4a544935deb7c17f1b"
+  };
+  var ADMIN_EMAIL = "jainjayant558@gmail.com";
+
+  var FIREBASE_READY = firebaseConfig.apiKey.indexOf("PASTE_") !== 0;
+  if(FIREBASE_READY){
+    firebase.initializeApp(firebaseConfig);
+  }
+</script>
 <style>
   :root{
     --linen: #E7DFC9;
@@ -115,6 +142,201 @@
     transition:background .2s ease;
   }
   .nav-cta:hover{background:var(--sienna); border-color:var(--sienna);}
+
+  .account-area{display:flex; align-items:center; gap:12px; position:relative;}
+  .bell-btn{
+    position:relative;
+    background:none;
+    border:none;
+    cursor:pointer;
+    padding:6px;
+    display:flex;
+  }
+  .bell-badge{
+    position:absolute;
+    top:0; right:0;
+    background:var(--sienna);
+    color:#fff;
+    font-size:10.5px;
+    font-weight:700;
+    border-radius:20px;
+    padding:1px 5px;
+    line-height:1.3;
+  }
+  .user-name-label{font-size:13.5px; font-weight:600; color:var(--walnut-deep); margin-right:8px;}
+  .notif-panel{
+    display:none;
+    position:absolute;
+    top:66px;
+    right:32px;
+    width:300px;
+    max-height:360px;
+    overflow-y:auto;
+    background:#fff;
+    border:1px solid rgba(74,50,38,0.18);
+    border-radius:6px;
+    box-shadow:0 18px 40px rgba(46,31,23,0.18);
+    z-index:80;
+  }
+  .notif-panel-head{
+    padding:14px 16px;
+    font-weight:700;
+    font-size:14px;
+    border-bottom:1px solid rgba(74,50,38,0.12);
+    color:var(--walnut-deep);
+  }
+  .notif-item{
+    padding:12px 16px;
+    border-bottom:1px solid rgba(74,50,38,0.08);
+    font-size:13.5px;
+    color:#4a3b2c;
+  }
+  .notif-item .notif-time{display:block; font-size:11.5px; color:#8c7d62; margin-top:2px;}
+
+  @media(max-width:760px){
+    .user-name-label{display:none;}
+  }
+
+  /* ===== INTRO ANIMATION: ALMIRAH OPENING ===== */
+  body.intro-active{overflow:hidden; height:100vh;}
+
+  .intro-overlay{
+    position:fixed;
+    inset:0;
+    z-index:500;
+    background:linear-gradient(160deg, var(--linen), var(--linen-deep));
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:opacity .8s ease, visibility .8s ease;
+  }
+  .intro-overlay.hide{opacity:0; visibility:hidden; pointer-events:none;}
+
+  .almirah-scene{perspective:1200px;}
+  .almirah-frame{
+    position:relative;
+    width:300px;
+    height:400px;
+    max-width:78vw;
+    max-height:60vh;
+    border-radius:6px;
+    box-shadow:0 30px 70px rgba(0,0,0,0.35);
+    transform-style:preserve-3d;
+    overflow:hidden;
+    background:var(--walnut-deep);
+  }
+  .almirah-legs{
+    position:absolute;
+    left:50%;
+    bottom:-14px;
+    width:82%;
+    transform:translateX(-50%);
+    display:flex;
+    justify-content:space-between;
+  }
+  .almirah-legs span{
+    width:10px; height:16px;
+    background:var(--walnut-deep);
+    border-radius:0 0 3px 3px;
+  }
+  .almirah-inside{
+    position:absolute;
+    inset:0;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:24px;
+    background:radial-gradient(circle at 50% 40%, #56613F 0%, #2E1F17 72%);
+  }
+  .almirah-store-name{
+    font-family:'Fraunces', serif;
+    color:#EFE7D3;
+    font-size:clamp(22px, 4vw, 30px);
+    font-weight:600;
+    opacity:0;
+    transform:translateY(10px);
+    animation:revealText .8s ease forwards;
+    animation-delay:2.1s;
+  }
+  .almirah-store-tag{
+    color:#cabfa4;
+    font-size:13px;
+    margin-top:10px;
+    max-width:220px;
+    opacity:0;
+    transform:translateY(10px);
+    animation:revealText .8s ease forwards;
+    animation-delay:2.4s;
+  }
+  @keyframes revealText{ to{opacity:1; transform:translateY(0);} }
+
+  .almirah-door{
+    position:absolute;
+    top:0; bottom:0;
+    width:50%;
+    background:linear-gradient(160deg, #5C4030, #3E2B23);
+    border:2px solid #2E1F17;
+    box-shadow:inset 0 0 30px rgba(0,0,0,0.4);
+  }
+  .almirah-door::after{
+    content:"";
+    position:absolute;
+    inset:14px;
+    border:1px solid rgba(163,130,47,0.5);
+    border-radius:2px;
+  }
+  .almirah-door.left{
+    left:0;
+    transform-origin:left center;
+    animation:openLeftDoor 1.2s ease-in-out forwards;
+    animation-delay:.6s;
+  }
+  .almirah-door.right{
+    right:0;
+    transform-origin:right center;
+    animation:openRightDoor 1.2s ease-in-out forwards;
+    animation-delay:.6s;
+  }
+  .almirah-door.left::before{
+    content:"";
+    position:absolute; right:14px; top:50%;
+    width:7px; height:32px;
+    background:var(--brass);
+    border-radius:3px;
+    transform:translateY(-50%);
+  }
+  .almirah-door.right::before{
+    content:"";
+    position:absolute; left:14px; top:50%;
+    width:7px; height:32px;
+    background:var(--brass);
+    border-radius:3px;
+    transform:translateY(-50%);
+  }
+  @keyframes openLeftDoor{ to{transform:rotateY(-112deg);} }
+  @keyframes openRightDoor{ to{transform:rotateY(112deg);} }
+
+  .skip-intro-btn{
+    position:absolute;
+    bottom:28px; right:28px;
+    background:none;
+    border:1px solid rgba(74,50,38,0.4);
+    color:var(--walnut-deep);
+    padding:8px 18px;
+    border-radius:20px;
+    font-size:13px;
+    cursor:pointer;
+    font-family:'Karla', sans-serif;
+  }
+  .skip-intro-btn:hover{background:rgba(74,50,38,0.08);}
+
+  @media (prefers-reduced-motion: reduce){
+    .almirah-door.left, .almirah-door.right, .almirah-store-name, .almirah-store-tag{
+      animation:none;
+    }
+  }
 
   @media(max-width:760px){
     .nav-links{display:none;}
@@ -260,6 +482,7 @@
     margin-bottom:10px;
   }
   .cat-desc{font-size:14.5px; color:#5a4c3c; margin-bottom:16px;}
+  .cat-price{font-size:15px; font-weight:700; color:var(--sienna); margin-bottom:10px;}
   .cat-link{
     font-size:14px;
     font-weight:700;
@@ -267,6 +490,153 @@
     text-decoration:none;
     border-bottom:1px solid var(--sienna);
     padding-bottom:1px;
+  }
+
+  .type-tile{cursor:pointer;}
+  .type-tile:hover .cat-icon svg path, .type-tile:hover .cat-icon svg rect, .type-tile:hover .cat-icon svg circle{
+    opacity:0.85;
+  }
+  .type-tile-arrow{font-size:13px; color:var(--sienna); font-weight:700;}
+
+  .cat-back-btn{
+    background:none;
+    border:none;
+    color:var(--sienna);
+    font-size:14px;
+    font-weight:700;
+    cursor:pointer;
+    padding:0;
+    font-family:'Karla', sans-serif;
+  }
+
+  /* ===== ADMIN ===== */
+  .admin-link{
+    background:none;
+    border:none;
+    color:#8c7d62;
+    font-size:12.5px;
+    cursor:pointer;
+    text-decoration:underline;
+    padding:0;
+    font-family:'Karla', sans-serif;
+  }
+  .admin-overlay{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(43,36,29,0.6);
+    z-index:200;
+    align-items:flex-start;
+    justify-content:center;
+    padding:40px 20px;
+    overflow-y:auto;
+  }
+  .admin-box{
+    background:var(--linen);
+    border-radius:6px;
+    max-width:640px;
+    width:100%;
+    padding:32px;
+    position:relative;
+    box-shadow:0 24px 60px rgba(0,0,0,0.3);
+  }
+  .admin-close{
+    position:absolute;
+    top:16px; right:16px;
+    background:none;
+    border:none;
+    font-size:22px;
+    line-height:1;
+    cursor:pointer;
+    color:var(--walnut);
+  }
+  .admin-box h3{font-size:22px; margin-bottom:6px;}
+  .admin-sub{font-size:13.5px; color:#5a4c3c; margin-bottom:20px;}
+  .admin-field{margin-bottom:16px;}
+  .admin-field label{display:block; font-size:13px; font-weight:700; color:var(--walnut-deep); margin-bottom:6px;}
+  .admin-field input, .admin-field select, .admin-field textarea{
+    width:100%;
+    padding:11px 13px;
+    border:1px solid rgba(74,50,38,0.3);
+    border-radius:2px;
+    background:#fff;
+    font-family:'Karla', sans-serif;
+    font-size:14.5px;
+    color:var(--ink);
+  }
+  .admin-field textarea{resize:vertical; min-height:70px;}
+  .admin-row{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  .admin-error{display:none; color:#a33; font-size:13.5px; margin-top:8px;}
+  .admin-btn{
+    background:var(--sage);
+    color:#fff;
+    border:none;
+    padding:12px 22px;
+    border-radius:2px;
+    font-weight:700;
+    font-size:14.5px;
+    cursor:pointer;
+  }
+  .admin-btn.secondary{
+    background:transparent;
+    color:var(--walnut-deep);
+    border:1px solid var(--walnut);
+  }
+  .admin-btn.danger{background:#a33;}
+  .photo-input-row{display:flex; align-items:center; gap:14px; flex-wrap:wrap;}
+  #photoPreview{
+    display:none;
+    width:70px; height:70px;
+    object-fit:cover;
+    border-radius:4px;
+    border:1px solid rgba(74,50,38,0.25);
+  }
+  .admin-camera-btn{
+    background:var(--walnut-deep);
+    color:#fff;
+    border:none;
+    padding:10px 16px;
+    border-radius:2px;
+    font-size:13.5px;
+    font-weight:600;
+    cursor:pointer;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+  }
+  .admin-list{margin-top:26px; border-top:1px solid rgba(74,50,38,0.18); padding-top:20px;}
+  .admin-list-item{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    padding:12px 0;
+    border-bottom:1px solid rgba(74,50,38,0.12);
+  }
+  .admin-thumb{
+    width:48px; height:48px;
+    border-radius:4px;
+    background:var(--cream-card);
+    flex-shrink:0;
+    overflow:hidden;
+    display:flex; align-items:center; justify-content:center;
+    font-size:11px; color:#8c7d62;
+  }
+  .admin-thumb img{width:100%; height:100%; object-fit:cover;}
+  .admin-item-info{flex:1; font-size:14px;}
+  .admin-item-info span{color:#6b5c48; font-size:12.5px;}
+  .admin-item-actions{display:flex; gap:8px;}
+  .admin-item-actions button{
+    font-size:12.5px;
+    padding:6px 12px;
+    border-radius:2px;
+    cursor:pointer;
+    border:1px solid rgba(74,50,38,0.3);
+    background:#fff;
+  }
+  .admin-item-actions button.del{color:#a33; border-color:#a33;}
+
+  @media(max-width:600px){
+    .admin-row{grid-template-columns:1fr;}
   }
   .piece{
     background:var(--cream-card);
@@ -459,6 +829,46 @@
 </head>
 <body>
 
+<div class="intro-overlay" id="introOverlay">
+  <div class="almirah-scene">
+    <div class="almirah-frame">
+      <div class="almirah-inside">
+        <div class="almirah-store-name">Anil Enterprises</div>
+        <div class="almirah-store-tag">Steel &amp; Wooden Furniture — Home &amp; Office</div>
+      </div>
+      <div class="almirah-door left"></div>
+      <div class="almirah-door right"></div>
+      <div class="almirah-legs"><span></span><span></span></div>
+    </div>
+  </div>
+  <button type="button" class="skip-intro-btn" id="skipIntro">Skip →</button>
+</div>
+
+<script>
+  (function(){
+    var overlay = document.getElementById("introOverlay");
+    if(!overlay) return;
+    var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    function finishIntro(){
+      overlay.classList.add("hide");
+      document.body.classList.remove("intro-active");
+      setTimeout(function(){ overlay.style.display = "none"; }, 850);
+    }
+
+    if(reduceMotion){
+      overlay.style.display = "none";
+    } else {
+      document.body.classList.add("intro-active");
+      var introTimer = setTimeout(finishIntro, 3700);
+      document.getElementById("skipIntro").addEventListener("click", function(){
+        clearTimeout(introTimer);
+        finishIntro();
+      });
+    }
+  })();
+</script>
+
 <header>
   <div class="nav">
     <div class="logo">
@@ -470,12 +880,31 @@
     </div>
     <nav class="nav-links">
       <a href="#catalog">Catalog</a>
+      <a href="#customize">Customize</a>
       <a href="#about">Our Craft</a>
       <a href="#contact">Contact</a>
     </nav>
-    <a class="nav-cta" href="#contact">Request a Quote</a>
+    <div class="account-area">
+      <button type="button" class="bell-btn" id="notifBell" title="Notifications">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none"><path d="M6 10a6 6 0 1112 0c0 4 1.5 5.5 2 6H4c.5-.5 2-2 2-6z" stroke="#4A3226" stroke-width="1.8" stroke-linejoin="round"/><path d="M10 19a2 2 0 004 0" stroke="#4A3226" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <span class="bell-badge" id="bellBadge" style="display:none;">0</span>
+      </button>
+      <div id="signedOutArea">
+        <button type="button" class="nav-cta" id="googleSignInBtn">Sign in with Google</button>
+      </div>
+      <div id="signedInArea" style="display:none;">
+        <span id="userNameLabel" class="user-name-label"></span>
+        <button type="button" class="admin-link" id="signOutBtn">Sign out</button>
+      </div>
+      <button type="button" class="admin-link" id="adminOpenLink" style="display:none; margin-left:6px;">Admin</button>
+    </div>
   </div>
 </header>
+
+<div class="notif-panel" id="notifPanel">
+  <div class="notif-panel-head">Notifications</div>
+  <div id="notifList"><p class="admin-sub" style="padding:14px;">No notifications yet.</p></div>
+</div>
 
 <section class="hero">
   <div class="wrap hero-grid">
@@ -486,7 +915,7 @@
       <p style="font-size:15.5px; font-weight:600; color:var(--sage-deep); margin-bottom:28px; max-width:46ch;">All varieties of steel and wooden furniture available — for home as well as office — with full customization on every order.</p>
       <div class="hero-actions">
         <a class="btn-primary" href="#catalog">Browse the Catalog</a>
-        <a class="btn-ghost" href="#contact">Visit the Workshop</a>
+        <a class="btn-ghost" href="https://www.google.com/maps/dir/?api=1&destination=22.6286985,80.3651015" target="_blank" rel="noopener noreferrer">Visit the Workshop</a>
       </div>
       <div class="hero-stats">
         <div>
@@ -497,27 +926,97 @@
           <div class="stat-num">100%</div>
           <div class="stat-label">solid wood, no veneer</div>
         </div>
-        <div>
-          <div class="stat-num">2,400</div>
-          <div class="stat-label">pieces in local homes</div>
-        </div>
       </div>
     </div>
     <div class="hero-art">
       <svg viewBox="0 0 420 420" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <ellipse cx="210" cy="360" rx="160" ry="16" fill="#4A3226" opacity="0.12"/>
-        <!-- chair -->
-        <path d="M110 360V230" stroke="#4A3226" stroke-width="6" stroke-linecap="round"/>
-        <path d="M300 360V230" stroke="#4A3226" stroke-width="6" stroke-linecap="round"/>
-        <path d="M110 230V80" stroke="#4A3226" stroke-width="6" stroke-linecap="round"/>
-        <path d="M300 230V150" stroke="#4A3226" stroke-width="6" stroke-linecap="round"/>
-        <rect x="100" y="220" width="210" height="18" rx="3" fill="#A85A26"/>
-        <path d="M115 82H305" stroke="#4A3226" stroke-width="6" stroke-linecap="round"/>
-        <path d="M115 120H305" stroke="#4A3226" stroke-width="5" stroke-linecap="round" opacity="0.55"/>
-        <path d="M115 160H305" stroke="#4A3226" stroke-width="5" stroke-linecap="round" opacity="0.55"/>
-        <path d="M150 360V300" stroke="#4A3226" stroke-width="6" stroke-linecap="round"/>
-        <path d="M260 360V300" stroke="#4A3226" stroke-width="6" stroke-linecap="round"/>
-        <path d="M140 296H320" stroke="#6E7B58" stroke-width="5" stroke-linecap="round"/>
+        <defs>
+          <radialGradient id="glow" cx="50%" cy="38%" r="60%">
+            <stop offset="0%" stop-color="#F3EEDF" stop-opacity="0.9"/>
+            <stop offset="100%" stop-color="#F3EEDF" stop-opacity="0"/>
+          </radialGradient>
+          <linearGradient id="chairBody" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#C46B2E"/>
+            <stop offset="100%" stop-color="#9C5522"/>
+          </linearGradient>
+          <linearGradient id="chairBodyLight" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#D98040"/>
+            <stop offset="100%" stop-color="#B0602A"/>
+          </linearGradient>
+          <linearGradient id="woodLeg" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#5C4030"/>
+            <stop offset="100%" stop-color="#3E2B23"/>
+          </linearGradient>
+          <linearGradient id="tableTop" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#6E7B58"/>
+            <stop offset="100%" stop-color="#56613F"/>
+          </linearGradient>
+          <radialGradient id="lampGlow" cx="50%" cy="35%" r="65%">
+            <stop offset="0%" stop-color="#F6C86B" stop-opacity="0.9"/>
+            <stop offset="100%" stop-color="#F6C86B" stop-opacity="0"/>
+          </radialGradient>
+          <linearGradient id="potGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#B0602A"/>
+            <stop offset="100%" stop-color="#8C491D"/>
+          </linearGradient>
+        </defs>
+
+        <circle cx="210" cy="170" r="190" fill="url(#glow)"/>
+
+        <!-- rug -->
+        <ellipse cx="205" cy="368" rx="185" ry="30" fill="#DCD2B6"/>
+        <ellipse cx="205" cy="368" rx="185" ry="30" fill="none" stroke="#A3822F" stroke-width="2" opacity="0.4"/>
+        <ellipse cx="205" cy="368" rx="140" ry="22" fill="none" stroke="#A3822F" stroke-width="1.5" opacity="0.35"/>
+
+        <!-- soft contact shadows -->
+        <ellipse cx="150" cy="378" rx="95" ry="12" fill="#2E1F17" opacity="0.14"/>
+        <ellipse cx="345" cy="372" rx="42" ry="9" fill="#2E1F17" opacity="0.12"/>
+
+        <!-- side table + lamp -->
+        <g>
+          <circle cx="345" cy="215" r="55" fill="url(#lampGlow)"/>
+          <path d="M330 130L360 130L352 178L338 178Z" fill="#EFE7D3"/>
+          <rect x="343" y="122" width="4" height="10" fill="#A3822F"/>
+          <rect x="333" y="178" width="24" height="6" rx="2" fill="#3E2B23"/>
+          <rect x="341" y="184" width="8" height="46" fill="url(#woodLeg)"/>
+          <ellipse cx="345" cy="232" rx="34" ry="7" fill="#3E2B23"/>
+          <rect x="311" y="225" width="68" height="7" rx="2" fill="url(#tableTop)"/>
+          <rect x="316" y="232" width="5" height="52" fill="url(#woodLeg)"/>
+          <rect x="374" y="232" width="5" height="52" fill="url(#woodLeg)"/>
+        </g>
+
+        <!-- potted plant -->
+        <g>
+          <path d="M55 205C40 190 40 165 58 150C64 172 62 188 55 205Z" fill="#6E7B58"/>
+          <path d="M55 205C50 180 62 158 85 148C82 172 72 190 55 205Z" fill="#586A44"/>
+          <path d="M55 205C60 178 52 155 35 140C40 165 45 188 55 205Z" fill="#7C8C63"/>
+          <path d="M50 205H62L66 240C66 245 46 245 46 240Z" fill="url(#potGrad)"/>
+          <ellipse cx="56" cy="205" rx="10" ry="3.5" fill="#8C491D"/>
+        </g>
+
+        <!-- armchair -->
+        <g>
+          <!-- back cushion -->
+          <path d="M120 210C120 165 140 130 205 130C270 130 290 165 290 210V300H120V210Z" fill="url(#chairBody)"/>
+          <!-- inner back highlight -->
+          <path d="M140 205C140 172 158 148 205 148C252 148 270 172 270 205V275H140V205Z" fill="url(#chairBodyLight)"/>
+          <!-- tufting lines -->
+          <path d="M170 165V265M205 155V275M240 165V265" stroke="#8C491D" stroke-width="2" opacity="0.35" stroke-linecap="round"/>
+          <!-- armrests -->
+          <path d="M95 240C95 222 108 210 126 210H140V300H108C100 300 95 292 95 282V240Z" fill="url(#chairBody)"/>
+          <path d="M315 240C315 222 302 210 284 210H270V300H302C310 300 315 292 315 282V240Z" fill="url(#chairBody)"/>
+          <!-- seat cushion -->
+          <rect x="108" y="270" width="194" height="42" rx="10" fill="url(#chairBodyLight)"/>
+          <path d="M205 270V312" stroke="#8C491D" stroke-width="2" opacity="0.3"/>
+          <!-- legs -->
+          <path d="M126 312L112 366" stroke="url(#woodLeg)" stroke-width="8" stroke-linecap="round"/>
+          <path d="M284 312L298 366" stroke="url(#woodLeg)" stroke-width="8" stroke-linecap="round"/>
+          <path d="M150 312L146 360" stroke="url(#woodLeg)" stroke-width="7" stroke-linecap="round"/>
+          <path d="M260 312L264 360" stroke="url(#woodLeg)" stroke-width="7" stroke-linecap="round"/>
+          <!-- throw pillow -->
+          <rect x="150" y="230" width="52" height="46" rx="10" fill="#6E7B58" transform="rotate(-6 176 253)"/>
+          <path d="M162 236L192 270M192 236L162 270" stroke="#4E5A3B" stroke-width="1.5" opacity="0.5" transform="rotate(-6 176 253)"/>
+        </g>
       </svg>
     </div>
   </div>
@@ -531,113 +1030,57 @@
       <p>All varieties of steel and wooden furniture, for home and office — every category below is available fully customized to your size, finish, and budget.</p>
     </div>
 
-    <div class="cat-grid">
+    <div class="cat-grid" id="catalogTypeGrid">
+      <!-- Rendered by JS: top-level furniture types -->
+    </div>
 
-      <div class="cat-card">
-        <div class="cat-icon">
-          <svg viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M25 95V60C25 51 32 44 41 44H159C168 44 175 51 175 60V95" stroke="#4A3226" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M18 95H182V115C182 120 178 124 173 124H27C22 124 18 120 18 115V95Z" fill="#A85A26" opacity="0.85"/>
-            <path d="M18 95V80C18 74 22 70 28 70H172C178 70 182 74 182 80V95" stroke="#4A3226" stroke-width="6" stroke-linecap="round"/>
-            <path d="M25 124V138M175 124V138" stroke="#4A3226" stroke-width="7" stroke-linecap="round"/>
-          </svg>
+    <div id="catalogDrilldown" style="display:none;">
+      <button type="button" class="cat-back-btn" id="catalogBackBtn">&larr; Back to Categories</button>
+      <h3 id="catalogTypeTitle" style="margin:18px 0 4px;"></h3>
+      <div class="cat-grid" id="catalogProductGrid" style="margin-top:22px;"></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="customize" style="background:var(--linen-deep);">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="divider"></div>
+      <h2>Customization Board</h2>
+      <p>Real custom pieces from our workshop and from customers who've had furniture made to their own design. Sign in with Google to post your own.</p>
+    </div>
+
+    <div id="customizeSignedOutNote" class="map-note" style="max-width:560px; margin-bottom:28px;">
+      Sign in with Google (top right) to post a customization photo. Anyone can browse the board below.
+    </div>
+
+    <form id="customForm" class="admin-inline-form" style="display:none;">
+      <div class="admin-row">
+        <div class="admin-field">
+          <label for="cf_title">Title</label>
+          <input type="text" id="cf_title" placeholder="e.g. Custom oak bed with drawers">
         </div>
-        <div class="cat-name">Sofa</div>
-        <div class="cat-material">Steel frame &amp; wooden</div>
-        <p class="cat-desc">2, 3, and 5-seater sofa sets, made to order in your choice of upholstery and frame.</p>
-        <a class="cat-link" href="#contact">Enquire for pricing</a>
-      </div>
-
-      <div class="cat-card">
-        <div class="cat-icon">
-          <svg viewBox="0 0 200 160" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="20" y="60" width="160" height="14" rx="2" fill="#A85A26"/>
-            <path d="M30 74V130M170 74V130" stroke="#4A3226" stroke-width="7" stroke-linecap="round"/>
-            <path d="M50 74V115M150 74V115" stroke="#4A3226" stroke-width="6" stroke-linecap="round" opacity="0.5"/>
-          </svg>
+        <div class="admin-field">
+          <label>Photo</label>
+          <div class="photo-input-row">
+            <img id="cfPhotoPreview" alt="Preview">
+            <label class="admin-camera-btn">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none"><path d="M4 8H7L9 5H15L17 8H20V19H4V8Z" stroke="#fff" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="13" r="3.2" stroke="#fff" stroke-width="2"/></svg>
+              Take / Upload Photo
+              <input type="file" id="cf_photo" accept="image/*" capture="environment" style="display:none;">
+            </label>
+          </div>
         </div>
-        <div class="cat-name">Dining Table</div>
-        <div class="cat-material">Wooden</div>
-        <p class="cat-desc">4, 6, and 8-seater dining sets in solid wood, sized to fit your dining space.</p>
-        <a class="cat-link" href="#contact">Enquire for pricing</a>
       </div>
-
-      <div class="cat-card">
-        <div class="cat-icon">
-          <svg viewBox="0 0 200 160" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="25" y="55" width="150" height="16" rx="2" fill="#4A3226"/>
-            <path d="M35 71V130M165 71V130" stroke="#4A3226" stroke-width="7" stroke-linecap="round"/>
-            <rect x="35" y="90" width="60" height="30" rx="2" fill="#A85A26" opacity="0.6"/>
-            <path d="M40 100H90M40 110H90" stroke="#4A3226" stroke-width="2" opacity="0.4"/>
-          </svg>
-        </div>
-        <div class="cat-name">Office Table</div>
-        <div class="cat-material">Steel &amp; wooden</div>
-        <p class="cat-desc">Executive desks, workstations, and reception tables built for daily office use.</p>
-        <a class="cat-link" href="#contact">Enquire for pricing</a>
+      <div class="admin-field">
+        <label for="cf_desc">Description</label>
+        <textarea id="cf_desc" placeholder="What was customized, materials, size, etc."></textarea>
       </div>
+      <button type="submit" class="admin-btn">Post to Board</button>
+    </form>
 
-      <div class="cat-card">
-        <div class="cat-icon">
-          <svg viewBox="0 0 160 170" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M45 60C45 45 60 35 80 35C100 35 115 45 115 60" stroke="#4A3226" stroke-width="8" stroke-linecap="round" fill="none"/>
-            <rect x="55" y="60" width="50" height="45" rx="4" fill="#A85A26"/>
-            <path d="M60 105V145M100 105V145" stroke="#4A3226" stroke-width="7" stroke-linecap="round"/>
-            <path d="M60 145 A20 8 0 0 0 100 145" stroke="#6E7B58" stroke-width="5" fill="none" stroke-linecap="round"/>
-            <circle cx="80" cy="155" r="4" fill="#4A3226"/>
-          </svg>
-        </div>
-        <div class="cat-name">Revolving Chair</div>
-        <div class="cat-material">Steel &amp; cushioned</div>
-        <p class="cat-desc">Adjustable-height revolving chairs for office desks, counters, and workstations.</p>
-        <a class="cat-link" href="#contact">Enquire for pricing</a>
-      </div>
-
-      <div class="cat-card">
-        <div class="cat-icon">
-          <svg viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M20 60H30V115" stroke="#4A3226" stroke-width="7" stroke-linecap="round"/>
-            <path d="M180 60H170V115" stroke="#4A3226" stroke-width="7" stroke-linecap="round"/>
-            <rect x="25" y="80" width="150" height="35" rx="3" fill="#A85A26"/>
-            <rect x="20" y="55" width="30" height="30" rx="3" fill="#4A3226"/>
-            <path d="M20 118V135M180 118V135" stroke="#4A3226" stroke-width="7" stroke-linecap="round"/>
-          </svg>
-        </div>
-        <div class="cat-name">Bed</div>
-        <div class="cat-material">Wooden</div>
-        <p class="cat-desc">Single, double, and king-size beds, with or without storage, in your choice of wood finish.</p>
-        <a class="cat-link" href="#contact">Enquire for pricing</a>
-      </div>
-
-      <div class="cat-card">
-        <div class="cat-icon">
-          <svg viewBox="0 0 200 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="20" y="35" width="160" height="55" rx="8" fill="#A85A26"/>
-            <rect x="20" y="35" width="160" height="14" rx="7" fill="#6E7B58" opacity="0.7"/>
-            <path d="M20 90V100M180 90V100" stroke="#4A3226" stroke-width="6" stroke-linecap="round"/>
-          </svg>
-        </div>
-        <div class="cat-name">Mattress</div>
-        <div class="cat-material">Multiple firmness options</div>
-        <p class="cat-desc">Mattresses in standard and custom sizes to match any bed frame.</p>
-        <a class="cat-link" href="#contact">Enquire for pricing</a>
-      </div>
-
-      <div class="cat-card">
-        <div class="cat-icon">
-          <svg viewBox="0 0 160 180" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="25" y="20" width="110" height="140" rx="3" fill="none" stroke="#4A3226" stroke-width="7"/>
-            <path d="M80 20V160" stroke="#4A3226" stroke-width="5" opacity="0.6"/>
-            <circle cx="65" cy="90" r="3.5" fill="#A85A26"/>
-            <circle cx="95" cy="90" r="3.5" fill="#A85A26"/>
-          </svg>
-        </div>
-        <div class="cat-name">Almirah</div>
-        <div class="cat-material">Steel &amp; wooden</div>
-        <p class="cat-desc">Wardrobes and steel almirahs for home and office storage, with locking options.</p>
-        <a class="cat-link" href="#contact">Enquire for pricing</a>
-      </div>
-
+    <div class="cat-grid" id="customizeGrid" style="margin-top:32px;">
+      <p class="admin-sub">No customization posts yet.</p>
     </div>
   </div>
 </section>
@@ -740,8 +1183,8 @@
             <input type="email" id="email" required placeholder="you@example.com">
           </div>
           <div class="field">
-            <label for="phone">Phone (optional)</label>
-            <input type="tel" id="phone" placeholder="+91 95890 02838">
+            <label for="phone">Phone</label>
+            <input type="tel" id="phone" required placeholder="+91 95890 02838">
           </div>
         </div>
         <div class="field">
@@ -769,13 +1212,536 @@
 <footer>
   <div class="wrap footer-row">
     <div>© 2026 Anil Enterprises Furniture Co.</div>
-    <div style="display:flex; gap:24px;">
+    <div style="display:flex; gap:24px; align-items:center;">
       <a href="#catalog">Catalog</a>
       <a href="#about">Our Craft</a>
       <a href="#contact">Contact</a>
+      <button type="button" class="admin-link" id="adminOpenLink">Admin</button>
     </div>
   </div>
 </footer>
+
+<!-- ===== ADMIN OVERLAY ===== -->
+<div class="admin-overlay" id="adminOverlay">
+  <div class="admin-box">
+    <button type="button" class="admin-close" id="adminCloseBtn" aria-label="Close">&times;</button>
+
+    <div id="adminManageStep">
+      <h3 id="formTitle">Add New Furniture</h3>
+      <p class="admin-sub">Signed in as admin — changes save to the shared catalog and every visitor sees them instantly.</p>
+
+      <form id="adminForm">
+        <div class="admin-row">
+          <div class="admin-field">
+            <label for="af_category">Furniture Type</label>
+            <select id="af_category">
+              <option>Sofa</option>
+              <option>Bed</option>
+              <option>Mattress</option>
+              <option>Steel Almirah</option>
+              <option>Wooden Almirah</option>
+              <option>Office Table</option>
+              <option>Revolving Chair</option>
+              <option>Mandir</option>
+              <option>TV Unit</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="admin-field">
+            <label for="af_price">Price (₹)</label>
+            <input type="number" id="af_price" min="0" placeholder="e.g. 12000">
+          </div>
+        </div>
+        <div class="admin-field">
+          <label for="af_name">Furniture name</label>
+          <input type="text" id="af_name" placeholder="e.g. 3-Seater Fabric Sofa">
+        </div>
+        <div class="admin-field">
+          <label for="af_desc">Description</label>
+          <textarea id="af_desc" placeholder="Short description shown on the website"></textarea>
+        </div>
+        <div class="admin-field">
+          <label>Photo</label>
+          <div class="photo-input-row">
+            <img id="photoPreview" alt="Preview">
+            <label class="admin-camera-btn">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none"><path d="M4 8H7L9 5H15L17 8H20V19H4V8Z" stroke="#fff" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="13" r="3.2" stroke="#fff" stroke-width="2"/></svg>
+              Take / Upload Photo
+              <input type="file" id="af_photo" accept="image/*" capture="environment" style="display:none;">
+            </label>
+          </div>
+        </div>
+        <div style="display:flex; gap:12px; margin-top:8px;">
+          <button type="submit" class="admin-btn" id="af_submit">Add to Catalog</button>
+          <button type="button" class="admin-btn secondary" id="af_cancelEdit" style="display:none;">Cancel Edit</button>
+        </div>
+      </form>
+
+      <div class="admin-list" id="adminList"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  /* ============ FIREBASE-BACKED CATALOG, CUSTOMIZATION BOARD, AUTH, NOTIFICATIONS ============ */
+
+  var ICONS = {
+    "Sofa": '<svg viewBox="0 0 200 150" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="gSofaBack" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#D98040"/><stop offset="100%" stop-color="#9C5522"/></linearGradient><linearGradient id="gSofaSeat" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#C46B2E"/><stop offset="100%" stop-color="#9C5522"/></linearGradient></defs><ellipse cx="100" cy="138" rx="82" ry="8" fill="#2E1F17" opacity="0.15"/><path d="M20 100V70C20 60 27 53 37 53H163C173 53 180 60 180 70V100V100H20Z" fill="url(#gSofaBack)"/><path d="M38 100V78C38 71 44 65 51 65H149C156 65 162 71 162 78V100" fill="#E08A47" opacity="0.5"/><path d="M67 60V95M100 57V98M133 60V95" stroke="#8C491D" stroke-width="2" opacity="0.4" stroke-linecap="round"/><path d="M8 88C8 76 16 68 27 68H40V115H20C13 115 8 109 8 102V88Z" fill="url(#gSofaBack)"/><path d="M192 88C192 76 184 68 173 68H160V115H180C187 115 192 109 192 102V88Z" fill="url(#gSofaBack)"/><rect x="27" y="96" width="146" height="32" rx="9" fill="url(#gSofaSeat)"/><path d="M100 96V128" stroke="#8C491D" stroke-width="2" opacity="0.35"/><path d="M35 128L28 142M165 128L172 142" stroke="#3E2B23" stroke-width="7" stroke-linecap="round"/></svg>',
+
+    "Bed": '<svg viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="gBedHead" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#5C4030"/><stop offset="100%" stop-color="#3E2B23"/></linearGradient><linearGradient id="gBedSpread" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#7C8C63"/><stop offset="100%" stop-color="#56613F"/></linearGradient></defs><ellipse cx="100" cy="128" rx="86" ry="7" fill="#2E1F17" opacity="0.15"/><rect x="22" y="35" width="18" height="60" rx="3" fill="url(#gBedHead)"/><rect x="26" y="40" width="10" height="48" rx="2" fill="#6E4A36" opacity="0.6"/><rect x="26" y="75" width="152" height="30" rx="4" fill="url(#gBedSpread)"/><rect x="30" y="60" width="40" height="22" rx="6" fill="#EFE7D3"/><rect x="26" y="95" width="152" height="16" rx="3" fill="#3E2B23" opacity="0.85"/><path d="M30 111V124M170 111V124" stroke="#3E2B23" stroke-width="7" stroke-linecap="round"/></svg>',
+
+    "Mattress": '<svg viewBox="0 0 200 120" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="gMattress" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#F3EEDF"/><stop offset="100%" stop-color="#DCD2B6"/></linearGradient></defs><ellipse cx="100" cy="98" rx="84" ry="8" fill="#2E1F17" opacity="0.13"/><rect x="18" y="38" width="164" height="50" rx="10" fill="url(#gMattress)"/><rect x="18" y="38" width="164" height="14" rx="7" fill="#6E7B58" opacity="0.55"/><path d="M40 60L48 68L40 76M75 60L83 68L75 76M110 60L118 68L110 76M145 60L153 68L145 76" stroke="#A3822F" stroke-width="2" opacity="0.5" stroke-linecap="round" stroke-linejoin="round"/><rect x="18" y="82" width="164" height="8" rx="4" fill="#C7BB98"/></svg>',
+
+    "Steel Almirah": '<svg viewBox="0 0 160 180" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="gSteel" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#AEB6BE"/><stop offset="45%" stop-color="#8A94A0"/><stop offset="100%" stop-color="#5B6470"/></linearGradient><linearGradient id="gSteelDoor" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#C3CAD1"/><stop offset="100%" stop-color="#8A94A0"/></linearGradient></defs><ellipse cx="80" cy="168" rx="52" ry="7" fill="#2E1F17" opacity="0.15"/><rect x="24" y="18" width="112" height="146" rx="4" fill="url(#gSteel)"/><rect x="30" y="24" width="48" height="134" rx="3" fill="url(#gSteelDoor)"/><rect x="82" y="24" width="48" height="134" rx="3" fill="url(#gSteelDoor)"/><rect x="78" y="18" width="4" height="146" fill="#4A5058" opacity="0.6"/><circle cx="72" cy="92" r="3.5" fill="#3E4249"/><circle cx="88" cy="92" r="3.5" fill="#3E4249"/></svg>',
+
+    "Wooden Almirah": '<svg viewBox="0 0 160 180" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="gWood" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#7A5642"/><stop offset="50%" stop-color="#5C4030"/><stop offset="100%" stop-color="#3E2B23"/></linearGradient><linearGradient id="gWoodDoor" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#C46B2E"/><stop offset="100%" stop-color="#8C491D"/></linearGradient></defs><ellipse cx="80" cy="168" rx="52" ry="7" fill="#2E1F17" opacity="0.15"/><rect x="24" y="18" width="112" height="146" rx="4" fill="url(#gWood)"/><rect x="30" y="24" width="48" height="134" rx="3" fill="url(#gWoodDoor)"/><rect x="82" y="24" width="48" height="134" rx="3" fill="url(#gWoodDoor)"/><rect x="78" y="18" width="4" height="146" fill="#3E2B23" opacity="0.7"/><circle cx="72" cy="92" r="3.5" fill="#A3822F"/><circle cx="88" cy="92" r="3.5" fill="#A3822F"/></svg>',
+
+    "Office Table": '<svg viewBox="0 0 200 150" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="gDeskTop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#5C4030"/><stop offset="100%" stop-color="#3E2B23"/></linearGradient><linearGradient id="gDeskDrw" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#D98040"/><stop offset="100%" stop-color="#9C5522"/></linearGradient></defs><ellipse cx="100" cy="132" rx="84" ry="7" fill="#2E1F17" opacity="0.14"/><rect x="20" y="48" width="160" height="16" rx="3" fill="url(#gDeskTop)"/><rect x="112" y="64" width="46" height="60" rx="3" fill="url(#gDeskDrw)"/><rect x="120" y="74" width="30" height="6" rx="2" fill="#3E2B23" opacity="0.5"/><rect x="120" y="94" width="30" height="6" rx="2" fill="#3E2B23" opacity="0.5"/><path d="M30 64V124M170 64V124" stroke="#3E2B23" stroke-width="7" stroke-linecap="round"/></svg>',
+
+    "Revolving Chair": '<svg viewBox="0 0 160 180" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="gChairBack" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#3E4249"/><stop offset="100%" stop-color="#2A2D32"/></linearGradient><linearGradient id="gChairSeat" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#C46B2E"/><stop offset="100%" stop-color="#9C5522"/></linearGradient></defs><ellipse cx="80" cy="168" rx="46" ry="7" fill="#2E1F17" opacity="0.15"/><rect x="52" y="38" width="56" height="66" rx="14" fill="url(#gChairBack)"/><rect x="48" y="108" width="64" height="26" rx="10" fill="url(#gChairSeat)"/><rect x="76" y="134" width="8" height="26" fill="#3E4249"/><path d="M80 160L50 172M80 160L110 172M80 160L80 176M80 160L52 152M80 160L108 152" stroke="#2A2D32" stroke-width="5" stroke-linecap="round"/><circle cx="50" cy="172" r="3.5" fill="#1E2023"/><circle cx="110" cy="172" r="3.5" fill="#1E2023"/><circle cx="80" cy="176" r="3.5" fill="#1E2023"/></svg>',
+
+    "Mandir": '<svg viewBox="0 0 160 180" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="gMandirDome" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#D98040"/><stop offset="100%" stop-color="#9C5522"/></linearGradient><linearGradient id="gMandirBody" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#5C4030"/><stop offset="100%" stop-color="#3E2B23"/></linearGradient></defs><ellipse cx="80" cy="168" rx="50" ry="7" fill="#2E1F17" opacity="0.15"/><path d="M80 16L114 66H46Z" fill="url(#gMandirDome)"/><circle cx="80" cy="30" r="4.5" fill="#A3822F"/><rect x="54" y="66" width="52" height="68" rx="3" fill="url(#gMandirBody)"/><rect x="62" y="80" width="36" height="40" rx="2" fill="#EFE7D3" opacity="0.15"/><path d="M62 82H98M62 96H98M62 110H98" stroke="#A3822F" stroke-width="2" opacity="0.5"/><rect x="38" y="134" width="84" height="22" rx="3" fill="url(#gMandirDome)"/><rect x="44" y="156" width="8" height="16" fill="#2E1F17"/><rect x="108" y="156" width="8" height="16" fill="#2E1F17"/></svg>',
+
+    "TV Unit": '<svg viewBox="0 0 200 150" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="gTvScreen" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#3E4249"/><stop offset="60%" stop-color="#1E2023"/></linearGradient><linearGradient id="gTvCabinet" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#C46B2E"/><stop offset="100%" stop-color="#8C491D"/></linearGradient></defs><ellipse cx="100" cy="134" rx="84" ry="7" fill="#2E1F17" opacity="0.14"/><rect x="40" y="16" width="120" height="70" rx="5" fill="url(#gTvScreen)"/><rect x="48" y="24" width="104" height="54" rx="2" fill="#4A5058" opacity="0.35"/><rect x="94" y="86" width="12" height="10" fill="#2E1F17"/><rect x="24" y="98" width="152" height="32" rx="4" fill="url(#gTvCabinet)"/><rect x="34" y="108" width="36" height="12" rx="2" fill="#3E2B23" opacity="0.4"/><rect x="130" y="108" width="36" height="12" rx="2" fill="#3E2B23" opacity="0.4"/><path d="M40 130V142M160 130V142" stroke="#3E2B23" stroke-width="6" stroke-linecap="round"/></svg>',
+
+    "Other": '<svg viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="gOther" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#D98040"/><stop offset="100%" stop-color="#9C5522"/></linearGradient></defs><ellipse cx="80" cy="140" rx="44" ry="7" fill="#2E1F17" opacity="0.14"/><rect x="30" y="30" width="100" height="100" rx="8" fill="url(#gOther)"/><path d="M30 62H130M62 30V130" stroke="#3E2B23" stroke-width="4" opacity="0.4"/></svg>'
+  };
+
+  // Flat furniture categories — every category shows its full range directly,
+  // no sub-categories.
+  var TOP_CATEGORIES = [
+    "Sofa", "Bed", "Mattress", "Steel Almirah", "Wooden Almirah",
+    "Office Table", "Revolving Chair", "Mandir", "TV Unit"
+  ];
+
+  var SEED_PRODUCTS = [
+    {category:"Sofa", name:"Sofa", material:"Steel frame & wooden", description:"Full range of sofa sets, made to order in your choice of upholstery and frame.", price:null, image:null},
+    {category:"Bed", name:"Bed", material:"Wooden", description:"Beds in various styles and sizes, in your choice of wood finish.", price:null, image:null},
+    {category:"Mattress", name:"Mattress", material:"Multiple firmness options", description:"Mattresses in standard and custom sizes to match any bed frame.", price:null, image:null},
+    {category:"Steel Almirah", name:"Steel Almirah", material:"Steel", description:"Steel almirahs for home and office storage, with locking options.", price:null, image:null},
+    {category:"Wooden Almirah", name:"Wooden Almirah", material:"Wooden", description:"Wooden wardrobes and almirahs built to order.", price:null, image:null},
+    {category:"Office Table", name:"Office Table", material:"Steel & wooden", description:"Executive desks, workstations, and reception tables built for daily office use.", price:null, image:null},
+    {category:"Revolving Chair", name:"Revolving Chair", material:"Steel & cushioned", description:"Adjustable-height revolving chairs for office desks, counters, and workstations.", price:null, image:null},
+    {category:"Mandir", name:"Mandir", material:"Wooden", description:"Home mandirs and pooja units in various sizes and finishes.", price:null, image:null},
+    {category:"TV Unit", name:"TV Unit", material:"Steel & wooden", description:"TV units and entertainment cabinets to match your living room.", price:null, image:null}
+  ];
+
+  var db = null;
+  var currentUser = null;
+  var isAdmin = false;
+  var editingProductId = null;
+  var pendingProductImage = null;
+  var pendingCustomImage = null;
+  var LAST_SEEN_KEY = "ae_notif_last_seen";
+  var latestActivityTime = 0;
+
+  function escapeHtml(str){
+    return String(str == null ? "" : str).replace(/[&<>"']/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+    });
+  }
+  function formatPrice(p){
+    if(p === null || p === undefined || p === "") return "Enquire for pricing";
+    return "₹" + Number(p).toLocaleString("en-IN");
+  }
+  function timeAgo(ms){
+    var s = Math.floor((Date.now() - ms) / 1000);
+    if(s < 60) return "just now";
+    var m = Math.floor(s/60); if(m < 60) return m + "m ago";
+    var h = Math.floor(m/60); if(h < 24) return h + "h ago";
+    var d = Math.floor(h/24); return d + "d ago";
+  }
+
+  // Resize + compress an image file before storing it, so Firestore docs stay small.
+  function fileToCompressedDataUrl(file, maxDim, quality, callback){
+    var reader = new FileReader();
+    reader.onload = function(ev){
+      var img = new Image();
+      img.onload = function(){
+        var w = img.width, h = img.height;
+        if(w > h && w > maxDim){ h = Math.round(h * maxDim / w); w = maxDim; }
+        else if(h > maxDim){ w = Math.round(w * maxDim / h); h = maxDim; }
+        var canvas = document.createElement("canvas");
+        canvas.width = w; canvas.height = h;
+        canvas.getContext("2d").drawImage(img, 0, 0, w, h);
+        callback(canvas.toDataURL("image/jpeg", quality));
+      };
+      img.src = ev.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  /* ---------------- CATALOG (Firestore: products) ---------------- */
+
+  var allProducts = [];
+  var activeCategory = null;
+
+  function productCard(p){
+    var art = p.image
+      ? '<img src="'+p.image+'" alt="'+escapeHtml(p.name)+'" style="width:100%;height:100%;object-fit:cover;border-radius:4px;">'
+      : (ICONS[p.category] || ICONS["Other"]);
+    return (
+      '<div class="cat-card">' +
+        '<div class="cat-icon">'+art+'</div>' +
+        '<div class="cat-name">'+escapeHtml(p.name)+'</div>' +
+        '<div class="cat-material">'+escapeHtml(p.material || p.category)+'</div>' +
+        '<p class="cat-desc">'+escapeHtml(p.description||"")+'</p>' +
+        '<div class="cat-price">'+formatPrice(p.price)+'</div>' +
+        '<a class="cat-link" href="#contact">Enquire</a>' +
+      '</div>'
+    );
+  }
+
+  function renderCategoryTiles(){
+    var grid = document.getElementById("catalogTypeGrid");
+    if(!grid) return;
+    grid.innerHTML = TOP_CATEGORIES.map(function(cat){
+      var count = allProducts.filter(function(p){ return p.category === cat; }).length;
+      return (
+        '<div class="cat-card type-tile" onclick="openCategory(\''+cat+'\')">' +
+          '<div class="cat-icon">'+(ICONS[cat] || ICONS["Other"])+'</div>' +
+          '<div class="cat-name">'+escapeHtml(cat)+'</div>' +
+          '<div class="cat-material">'+(count ? count + " item" + (count===1?"":"s") : "Coming soon")+'</div>' +
+          '<a class="cat-link type-tile-arrow" href="javascript:void(0)" onclick="event.stopPropagation(); openCategory(\''+cat+'\')">View full range &rarr;</a>' +
+        '</div>'
+      );
+    }).join("");
+  }
+
+  function renderProductGrid(){
+    var grid = document.getElementById("catalogProductGrid");
+    if(!grid) return;
+    var items = allProducts.filter(function(p){ return p.category === activeCategory; });
+    grid.innerHTML = items.length
+      ? items.map(productCard).join("")
+      : '<p class="admin-sub">No items in this category yet — check back soon.</p>';
+  }
+
+  window.openCategory = function(cat){
+    activeCategory = cat;
+    document.getElementById("catalogTypeGrid").style.display = "none";
+    document.getElementById("catalogDrilldown").style.display = "block";
+    document.getElementById("catalogTypeTitle").textContent = cat;
+    renderProductGrid();
+    document.getElementById("catalogDrilldown").scrollIntoView({behavior:"smooth", block:"start"});
+  };
+
+  document.getElementById("catalogBackBtn").addEventListener("click", function(){
+    activeCategory = null;
+    document.getElementById("catalogDrilldown").style.display = "none";
+    document.getElementById("catalogTypeGrid").style.display = "grid";
+  });
+
+  function renderCatalog(products){
+    allProducts = products || [];
+    renderCategoryTiles();
+    if(activeCategory) renderProductGrid();
+  }
+
+  function renderAdminList(products){
+    var list = document.getElementById("adminList");
+    if(!list) return;
+    if(!products || products.length === 0){
+      list.innerHTML = '<p class="admin-sub">No items yet — add your first piece above.</p>';
+      return;
+    }
+    list.innerHTML = products.map(function(p){
+      var thumb = p.image ? '<img src="'+p.image+'" alt="">' : '';
+      return (
+        '<div class="admin-list-item">' +
+          '<div class="admin-thumb">'+thumb+'</div>' +
+          '<div class="admin-item-info"><strong>'+escapeHtml(p.name)+'</strong><br>' +
+            '<span>'+escapeHtml(p.category)+' · '+formatPrice(p.price)+'</span></div>' +
+          '<div class="admin-item-actions">' +
+            '<button type="button" onclick="editProduct(\''+p.id+'\')">Edit</button>' +
+            '<button type="button" class="del" onclick="deleteProduct(\''+p.id+'\')">Delete</button>' +
+          '</div>' +
+        '</div>'
+      );
+    }).join("");
+  }
+
+  function resetProductForm(){
+    editingProductId = null;
+    pendingProductImage = null;
+    document.getElementById("adminForm").reset();
+    document.getElementById("photoPreview").style.display = "none";
+    document.getElementById("formTitle").textContent = "Add New Furniture";
+    document.getElementById("af_submit").textContent = "Add to Catalog";
+    document.getElementById("af_cancelEdit").style.display = "none";
+  }
+
+  window.editProduct = function(id){
+    db.collection("products").doc(id).get().then(function(doc){
+      if(!doc.exists) return;
+      var p = doc.data();
+      editingProductId = id;
+      pendingProductImage = null;
+      document.getElementById("af_category").value = p.category;
+      document.getElementById("af_name").value = p.name;
+      document.getElementById("af_price").value = p.price || "";
+      document.getElementById("af_desc").value = p.description || "";
+      var preview = document.getElementById("photoPreview");
+      if(p.image){ preview.src = p.image; preview.style.display = "block"; }
+      else { preview.style.display = "none"; }
+      document.getElementById("formTitle").textContent = "Edit Furniture";
+      document.getElementById("af_submit").textContent = "Save Changes";
+      document.getElementById("af_cancelEdit").style.display = "inline-block";
+    });
+  };
+
+  window.deleteProduct = function(id){
+    if(!confirm("Delete this item from the catalog?")) return;
+    db.collection("products").doc(id).delete().catch(function(err){
+      alert("Couldn't delete: " + err.message);
+    });
+  };
+
+  document.getElementById("af_photo").addEventListener("change", function(e){
+    var file = e.target.files[0];
+    if(!file) return;
+    fileToCompressedDataUrl(file, 700, 0.72, function(dataUrl){
+      pendingProductImage = dataUrl;
+      var preview = document.getElementById("photoPreview");
+      preview.src = dataUrl;
+      preview.style.display = "block";
+    });
+  });
+
+  document.getElementById("adminForm").addEventListener("submit", function(e){
+    e.preventDefault();
+    if(!isAdmin){ alert("Admin sign-in required."); return; }
+    var category = document.getElementById("af_category").value;
+    var name = document.getElementById("af_name").value.trim();
+    var priceVal = document.getElementById("af_price").value;
+    var desc = document.getElementById("af_desc").value.trim();
+    if(!name){ alert("Please enter a furniture name."); return; }
+
+    var payload = {
+      category: category, name: name, material: category,
+      description: desc, price: priceVal ? Number(priceVal) : null,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
+    if(pendingProductImage !== null) payload.image = pendingProductImage;
+
+    var op;
+    if(editingProductId){
+      op = db.collection("products").doc(editingProductId).update(payload);
+    } else {
+      payload.image = pendingProductImage || null;
+      op = db.collection("products").add(payload);
+    }
+    op.then(function(){ resetProductForm(); })
+      .catch(function(err){ alert("Couldn't save: " + err.message); });
+  });
+
+  document.getElementById("af_cancelEdit").addEventListener("click", resetProductForm);
+
+  function watchProducts(){
+    db.collection("products").orderBy("createdAt", "desc").onSnapshot(function(snap){
+      var products = [];
+      snap.forEach(function(doc){ products.push(Object.assign({id: doc.id}, doc.data())); });
+      renderCatalog(products);
+      renderAdminList(products);
+      checkForNotifications();
+    }, function(err){
+      console.error("products listener error", err);
+      document.getElementById("catalogTypeGrid").innerHTML =
+        '<p class="admin-sub" style="color:#a33;">Couldn\'t load the catalog (' + escapeHtml(err.code || err.message) +
+        '). This usually means the Firestore database hasn\'t been created yet, or the security rules haven\'t been published — check the Firebase Console.</p>';
+    });
+  }
+
+  function seedProductsIfEmpty(){
+    db.collection("products").limit(1).get().then(function(snap){
+      if(snap.empty){
+        SEED_PRODUCTS.forEach(function(p){
+          db.collection("products").add(Object.assign({}, p, {
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+          })).catch(function(err){ console.error("seed write failed", err); });
+        });
+      }
+    }).catch(function(err){ console.error("seed check failed", err); });
+  }
+
+  /* ---------------- CUSTOMIZATION BOARD (Firestore: customizations) ---------------- */
+
+  function renderCustomizations(posts){
+    var grid = document.getElementById("customizeGrid");
+    if(!grid) return;
+    if(!posts || posts.length === 0){
+      grid.innerHTML = '<p class="admin-sub">No customization posts yet.</p>';
+      return;
+    }
+    grid.innerHTML = posts.map(function(p){
+      var img = p.image ? '<img src="'+p.image+'" alt="'+escapeHtml(p.title)+'" style="width:100%;height:100%;object-fit:cover;border-radius:4px;">' : ICONS["Other"];
+      return (
+        '<div class="cat-card">' +
+          '<div class="cat-icon">'+img+'</div>' +
+          '<div class="cat-name">'+escapeHtml(p.title || "Custom Piece")+'</div>' +
+          '<div class="cat-material">Posted by '+escapeHtml(p.postedByName || "a customer")+'</div>' +
+          '<p class="cat-desc">'+escapeHtml(p.description||"")+'</p>' +
+        '</div>'
+      );
+    }).join("");
+  }
+
+  document.getElementById("cf_photo").addEventListener("change", function(e){
+    var file = e.target.files[0];
+    if(!file) return;
+    fileToCompressedDataUrl(file, 700, 0.72, function(dataUrl){
+      pendingCustomImage = dataUrl;
+      var preview = document.getElementById("cfPhotoPreview");
+      preview.src = dataUrl;
+      preview.style.display = "block";
+    });
+  });
+
+  document.getElementById("customForm").addEventListener("submit", function(e){
+    e.preventDefault();
+    if(!currentUser){ alert("Please sign in with Google to post."); return; }
+    var title = document.getElementById("cf_title").value.trim();
+    var desc = document.getElementById("cf_desc").value.trim();
+    if(!title){ alert("Please add a title."); return; }
+    db.collection("customizations").add({
+      title: title,
+      description: desc,
+      image: pendingCustomImage || null,
+      postedByName: currentUser.displayName || currentUser.email,
+      postedByUid: currentUser.uid,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    }).then(function(){
+      document.getElementById("customForm").reset();
+      document.getElementById("cfPhotoPreview").style.display = "none";
+      pendingCustomImage = null;
+    }).catch(function(err){ alert("Couldn't post: " + err.message); });
+  });
+
+  function watchCustomizations(){
+    db.collection("customizations").orderBy("createdAt", "desc").limit(24).onSnapshot(function(snap){
+      var posts = [];
+      snap.forEach(function(doc){ posts.push(Object.assign({id: doc.id}, doc.data())); });
+      renderCustomizations(posts);
+      checkForNotifications();
+    }, function(err){
+      console.error("customizations listener error", err);
+    });
+  }
+
+  /* ---------------- NOTIFICATIONS (in-site "what's new" bell) ---------------- */
+
+  function checkForNotifications(){
+    Promise.all([
+      db.collection("products").orderBy("createdAt", "desc").limit(5).get(),
+      db.collection("customizations").orderBy("createdAt", "desc").limit(5).get()
+    ]).then(function(results){
+      var items = [];
+      results[0].forEach(function(doc){
+        var d = doc.data();
+        if(d.createdAt) items.push({label:"New catalog item: " + d.name, time: d.createdAt.toMillis()});
+      });
+      results[1].forEach(function(doc){
+        var d = doc.data();
+        if(d.createdAt) items.push({label:"New customization: " + (d.title||""), time: d.createdAt.toMillis()});
+      });
+      items.sort(function(a,b){ return b.time - a.time; });
+
+      var lastSeen = Number(localStorage.getItem(LAST_SEEN_KEY) || 0);
+      var unread = items.filter(function(it){ return it.time > lastSeen; });
+
+      var badge = document.getElementById("bellBadge");
+      if(unread.length > 0){
+        badge.style.display = "block";
+        badge.textContent = unread.length > 9 ? "9+" : unread.length;
+      } else {
+        badge.style.display = "none";
+      }
+
+      var list = document.getElementById("notifList");
+      if(items.length === 0){
+        list.innerHTML = '<p class="admin-sub" style="padding:14px;">No notifications yet.</p>';
+      } else {
+        list.innerHTML = items.map(function(it){
+          return '<div class="notif-item">'+escapeHtml(it.label)+'<span class="notif-time">'+timeAgo(it.time)+'</span></div>';
+        }).join("");
+      }
+    }).catch(function(err){ console.error("notification check failed", err); });
+  }
+
+  document.getElementById("notifBell").addEventListener("click", function(){
+    var panel = document.getElementById("notifPanel");
+    var open = panel.style.display === "block";
+    panel.style.display = open ? "none" : "block";
+    if(!open){
+      localStorage.setItem(LAST_SEEN_KEY, String(Date.now()));
+      document.getElementById("bellBadge").style.display = "none";
+    }
+  });
+
+  /* ---------------- AUTH ---------------- */
+
+  function applyAuthUI(user){
+    currentUser = user;
+    isAdmin = !!(user && user.email === ADMIN_EMAIL);
+
+    document.getElementById("signedOutArea").style.display = user ? "none" : "block";
+    document.getElementById("signedInArea").style.display = user ? "flex" : "none";
+    document.getElementById("adminOpenLink").style.display = isAdmin ? "inline-block" : "none";
+    document.getElementById("customForm").style.display = user ? "block" : "none";
+    document.getElementById("customizeSignedOutNote").style.display = user ? "none" : "block";
+
+    if(user){
+      document.getElementById("userNameLabel").textContent =
+        (user.displayName || user.email) + (isAdmin ? " (Admin)" : "");
+    }
+    if(!isAdmin){
+      document.getElementById("adminOverlay").style.display = "none";
+    }
+  }
+
+  document.getElementById("googleSignInBtn").addEventListener("click", function(){
+    var provider = new firebase.auth.GoogleAuthProvider();
+    firebase.auth().signInWithPopup(provider).catch(function(err){
+      alert("Sign-in failed: " + err.message);
+    });
+  });
+  document.getElementById("signOutBtn").addEventListener("click", function(){
+    firebase.auth().signOut();
+  });
+
+  /* ---------------- ADMIN OVERLAY OPEN/CLOSE ---------------- */
+
+  document.getElementById("adminOpenLink").addEventListener("click", function(){
+    if(!isAdmin) return;
+    document.getElementById("adminOverlay").style.display = "flex";
+  });
+  document.getElementById("adminCloseBtn").addEventListener("click", function(){
+    document.getElementById("adminOverlay").style.display = "none";
+    resetProductForm();
+  });
+  document.getElementById("adminOverlay").addEventListener("click", function(e){
+    if(e.target === this){
+      this.style.display = "none";
+      resetProductForm();
+    }
+  });
+
+  /* ---------------- BOOT ---------------- */
+
+  if(!FIREBASE_READY){
+    document.getElementById("catalogTypeGrid").innerHTML =
+      '<p class="admin-sub">This site needs its Firebase config added before the live catalog, sign-in, and customization board will work. See the comment at the top of the page.</p>';
+    document.getElementById("customizeGrid").innerHTML = "";
+  } else {
+    db = firebase.firestore();
+    firebase.auth().onAuthStateChanged(function(user){
+      applyAuthUI(user);
+    });
+    seedProductsIfEmpty();
+    watchProducts();
+    watchCustomizations();
+  }
+</script>
 
 <script>
   document.getElementById('inquiryForm').addEventListener('submit', function(e){

@@ -1,0 +1,35 @@
+Paste this into: Firebase Console → Build → Firestore Database → Rules tab → Publish
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Catalog: anyone can view, only the admin account can add/edit/delete
+    match /products/{productId} {
+      allow read: if true;
+      allow write: if request.auth != null
+                   && request.auth.token.email == "jainjayant558@gmail.com";
+    }
+
+    // Customization board: anyone can view, any signed-in user can post,
+    // only the poster themselves or the admin can edit/delete a post
+    match /customizations/{postId} {
+      allow read: if true;
+      allow create: if request.auth != null;
+      allow update, delete: if request.auth != null
+                   && (request.auth.token.email == "jainjayant558@gmail.com"
+                       || request.auth.uid == resource.data.postedByUid);
+    }
+  }
+}
+
+Notes:
+- "Start in test mode" (the default when you create the database) leaves
+  read/write wide open to anyone for 30 days, then locks everything —
+  replace it with the rules above so it stays secure permanently and works
+  the way the website expects (admin-only catalog edits, sign-in required
+  to post to the customization board).
+- The email check means the admin account is hard-coded as
+  jainjayant558@gmail.com. If you ever want to change who the admin is,
+  update it here AND in the ADMIN_EMAIL line near the top of index.html —
+  both need to match.
