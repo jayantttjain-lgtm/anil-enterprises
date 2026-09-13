@@ -1701,9 +1701,7 @@
 
   document.getElementById("googleSignInBtn").addEventListener("click", function(){
     var provider = new firebase.auth.GoogleAuthProvider();
-    firebase.auth().signInWithPopup(provider).catch(function(err){
-      alert("Sign-in failed: " + err.message);
-    });
+    firebase.auth().signInWithRedirect(provider);
   });
   document.getElementById("signOutBtn").addEventListener("click", function(){
     firebase.auth().signOut();
@@ -1736,6 +1734,9 @@
     db = firebase.firestore();
     firebase.auth().onAuthStateChanged(function(user){
       applyAuthUI(user);
+    });
+    firebase.auth().getRedirectResult().catch(function(err){
+      alert("Sign-in failed: " + err.message);
     });
     seedProductsIfEmpty();
     watchProducts();
